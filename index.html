@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>React Sports Game</title>
+</head>
+<body>
+    <!-- include an element for ReactDOM to attach our React-generated elements to -->
+    <div id="root"></div>
+
+    <!-- include React and ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <!-- include Babel standalone so we can process JSX in React.createElement stuff -->
+    <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!-- include our JS+JSX for the React Appliccation -->
+<script type="text/babel">
+
+// An App component under which all other components will be added
+
+class Team extends React.Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            shots: 0,
+            score: 0
+        }
+        this.shotSound = new Audio('file:///C:/Users/marsh/kenzie-projects/React-Basics-Sports-Game/assets/audio/Back+Board.mp3')
+        this.scoreSound = new Audio('file:///C:/Users/marsh/kenzie-projects/React-Basics-Sports-Game/assets/audio/Swish%20(1).mp3')
+    }
+
+    shotHandler = () => {
+        let score = this.state.score
+        this.shotSound.play()
+        
+        if (Math.random() > 0.5) {
+            score += 1
+          
+            setTimeout(() => {
+            this.scoreSound.play()    
+            }, 150)
+          
+            
+        }
+        this.setState((state, props) => ({
+            shots: this.state.shots + 1,
+            score
+        }))
+    }
+    render() {
+        let shotPercentageDiv
+
+        if (this.state.shots) {
+        
+        const shotPercentage = Math.round((this.state.score / this.state.shots) * 100)
+        shotPercentageDiv = (
+            <div>
+                    <strong>Shooting %: {shotPercentage} </strong>
+                </div>
+
+
+        )
+
+        }
+        return (
+            <div className="Team">
+                <h2>{this.props.name}</h2>
+
+                <div className="identity">
+                    <img src={this.props.logo} alt={this.props.name} />
+                </div>
+
+                <div>
+                    <strong>shots:</strong> {this.state.shots}
+                </div>
+
+                <div>
+                    <strong>score:</strong> {this.state.score}
+                </div>
+
+                {shotPercentageDiv}
+
+                <button onClick={this.shotHandler}>SHOOT</button>
+                
+                
+                </div>
+        )
+    }
+}
+
+    function Game(props) {
+        return (
+        <div className="Game">
+            <h1>Welcome to {props.venue}</h1>
+            <div className="stats">
+            <Team 
+            name={props.homeTeam.name}
+            logo={props.homeTeam.logoSrc}
+            />
+
+            <div className="versus">
+                <h1>VS</h1>
+
+            </div>
+
+            <Team 
+            name={props.visitingTeam.name}
+            logo={props.visitingTeam.logoSrc}
+            />
+        
+      
+    </div>
+        </div>
+        )
+    }
+
+
+function  App(props) {
+    const lakers = {
+        name: 'Los Angeles Lakers',
+        logoSrc: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Los_Angeles_Lakers_logo.svg/200px-Los_Angeles_Lakers_logo.svg.png"
+    }
+
+    const clippers = {
+        name: 'Los Angeles Clippers',
+        logoSrc: "https://upload.wikimedia.org/wikipedia/en/thumb/b/bb/Los_Angeles_Clippers_%282015%29.svg/200px-Los_Angeles_Clippers_%282015%29.svg.png"  
+    }
+
+    const nets = {
+        name: 'Brooklyn Nets',
+        logoSrc: "https://tse4.mm.bing.net/th?id=OIP._bf4eoJuEI2M_cNpZJP2kAHaHa&pid=Api&P=0&w=200&h=200"
+    }
+
+    const cavs = {
+        name: 'Cleveland Cavaliers',
+        logoSrc: "https://tse3.mm.bing.net/th?id=OIP.nAd5EPUyss90mlKAJCSLZgHaGZ&pid=Api&P=0&w=200&h=200"
+    }
+
+    return (
+        <div className="App">
+            <Game 
+            venue="Staples Center" 
+            homeTeam={lakers}
+            visitingTeam={clippers}
+            />
+            
+        <Game
+        venue="Rocket Mortgage FieldHouse"
+        homeTeam={nets}
+        visitingTeam={cavs}
+        />
+            
+  )
+    
+</div>
+)}
+
+
+
+// Render the App
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+)
+
+</script>
+</body>
+</html>
